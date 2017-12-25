@@ -4,29 +4,42 @@ import java.io.*;
 
 public class CmdLine {
 
+    public static int ATTEMPTS = 10;
+
 
     public static void main(String[] args) {
 
-        Runtime rt = Runtime.getRuntime();
-        try {
-            Process pr = rt.exec("ping.exe -?");
+        long millis = System.currentTimeMillis();
 
-          pr.waitFor();
+        for (int i = 0; i < ATTEMPTS; i++) {
 
-            int exitcode = pr.exitValue();
-            System.out.println(exitcode + " EXIT CODE ");
+            Runtime rt = Runtime.getRuntime();
+            try {
+                Process pr = rt.exec("x:\\Program Files\\Bitcoin\\daemon\\bitcoin-cli.exe walletpassphrase qazwsxedcrfv 1");
 
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+                pr.waitFor();
 
-            String s;
-            while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
+                int exitcode = pr.exitValue();
+/*
+                System.out.println(exitcode + " EXIT CODE ");
+
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+
+                String s;
+                while ((s = stdInput.readLine()) != null) {
+                    System.out.println(s);
+                }
+*/
+
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
             }
 
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+
         }
 
+        millis = System.currentTimeMillis() - millis;
+        System.out.println(millis/ATTEMPTS);
     }
 
 }
